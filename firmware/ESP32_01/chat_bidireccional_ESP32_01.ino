@@ -83,7 +83,7 @@ void conectarSSE() {
   if (!gsmClientRX.connect(SERVER, PORT)) return;
 
   gsmClientRX.print(
-    String("GET /subscribe?device_id=") + DEVICE_ID + " HTTP/1.1\r\n" +  // ← AGREGADO device_id en query
+    String("GET /subscribe?device_id=") + DEVICE_ID + " HTTP/1.1\r\n" + 
     "Host: " + SERVER + "\r\n"
     "Accept: text/event-stream\r\n"
     "Connection: keep-alive\r\n\r\n"
@@ -157,13 +157,11 @@ bool enviarHTTPPost(const String& payload) {
 
   StaticJsonDocument<256> doc;
   doc["device_id"] = DEVICE_ID;
-  doc["target_id"] = TARGET_ID;    // ← AGREGADO: A quién va dirigido
+  doc["target_id"] = TARGET_ID;    // A quién va dirigido
   doc["payload"] = payload;
   String body; 
   serializeJson(doc, body);
 
-  // 2. Timeout agresivo: Si el servidor no responde en 5 seg, abortamos
-  // Esto evita que el teclado se quede muerto si la red está lenta
   httpTX.setHttpResponseTimeout(500); 
 
   httpTX.beginRequest();
@@ -182,7 +180,7 @@ bool enviarHTTPPost(const String& payload) {
   if (statusCode == 200 or statusCode == 202) {
     displayEstado("Enviado OK", "");
     Serial.println("Enviado");
-    delay(200); // Pequeño feedback visual
+    delay(200); 
     return true;
   } else {
     displayEstado("Error Envío", String(statusCode));
@@ -204,7 +202,7 @@ void onMensajeEnviado(const String& txt){
 }
 
 //══════════════════════════════════════════════════════════════════
-// SETUP (TU ORIGINAL COMPLETO)
+// SETUP
 //══════════════════════════════════════════════════════════════════
 
 void setup(){
@@ -234,10 +232,6 @@ void setup(){
   displaySetTX("");
 }
 
-//══════════════════════════════════════════════════════════════════
-// LOOP OPTIMIZADO
-//══════════════════════════════════════════════════════════════════
-
 void loop(){
   tecladoProcesar();
 
@@ -245,20 +239,20 @@ void loop(){
 
   // --- PRIORIDAD 3: RED (CONTROLADA) ---
   static unsigned long cronometroRed = 0;
-  // Solo entramos a leer el módem cada 150ms para dejar que el teclado respire
+  // Solo entramos a leer el módem cada 5 s
   if (millis() - cronometroRed > 5000) {
     displayEstado("Leyendo mensajes", "");
-    unsigned long tInicio = millis();   // ⏱ inicio medición
+    unsigned long tInicio = millis();   // inicio medición
   
-    leerSSE();                          // lo que queremos medir
+    leerSSE();                          
     
-    unsigned long tFin = millis();      // ⏱ fin medición
-    Serial.print("leerSSE tardo: ");
+    unsigned long tFin = millis();      // fin medición
+    Serial.print("leerSSE tardo: "); // cuanto tarda en leer dentro de la funcion
     Serial.print(tFin - tInicio);
     Serial.println(" ms");
 
 
-    cronometroRed = millis();
+    cronometroRed = millis(); 
     displayFlush();
   }
 
