@@ -48,7 +48,7 @@ void _buildFrame() {
   // Zona TX
   display.setTextSize(1);
   display.setCursor(0, ZONA_TX_Y);
-  display.print(F("Tu: "));
+  display.print(F("ESP32_01: "));
   String txShow = _txActual;
   if (txShow.length() > 18) txShow = txShow.substring(txShow.length() - 18);
   display.print(txShow);
