@@ -5,7 +5,7 @@
  * - Lectura SSE por BLOQUES (no byte a byte)
  * - Poll LTE relajado (120 ms)
  * - Yield al RTOS → teclado fluido
- * * ESTE CÓDIGO ES PARA: ESP32 #1
+ * * ESTE CÓDIGO ES PARA: ESP32 #2
  */
 
 #define TINY_GSM_MODEM_SIM7600
